@@ -69,7 +69,7 @@ pipeline {
 
         stage('Docker Image Scan') {
             steps {
-                sh "trivy image --format table -o trivy-image-report.html srinu641/ncpl-devops-one:V3.001"
+                sh "trivy image --format table -o srinu641/ncpl-devops-one:V3.001"
             }
         }
 
