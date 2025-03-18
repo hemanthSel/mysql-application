@@ -42,6 +42,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                  echo "sonarqube Quality Gate"
+                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                  echo "End Sonarqube Quality Gate"
+
+                }
+            }
+        }
+
         stage('Docker Images') {
             steps {
                 script {
