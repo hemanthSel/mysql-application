@@ -2,31 +2,30 @@ pipeline {
     agent any
 
     tools {
-     jdk 'jdk 17'
-     maven 'maven3'
+        jdk 'jdk 17'
+        maven 'maven3'
     }
 
-    environment{
-        SCANNER_HOHE= tool 'sonar-scanner'
+    environment {
+        SCANNER_HOHE = tool 'sonar-scanner'
         IMAGE_NAME = 'srinu641/ncpl-devops-one'
         IMAGE_TAG = 'V3.001'
         TRIVY_REPORT = 'trivy-report.json'
     }
+
     stages {
         stage('Git Checkout') {
             steps {
-                 git branch: 'master', url: 'https://github.com/Srinu-rj/mysql-application'
+                git branch: 'master', url: 'https://github.com/Srinu-rj/mysql-application'
             }
         }
 
-        // clean removes the target/ directory (compiled code and artifacts).
         stage('Integration Test') {
             steps {
                 sh "mvn clean install -DskipTests=true"
             }
         }
 
-        // mvn compile runs the Maven compile phase, which compiles the project's source code.
         stage('Maven Compile') {
             steps {
                 echo "Maven Compile started..."
@@ -37,62 +36,58 @@ pipeline {
         stage('SonarQube-Analysis') {
             steps {
                 script {
-                 echo "sonarqube code analysis"
-                 withSonarQubeEnv(credentialsId: 'sonar-token') {
-                     sh ''' $SCANNER_HOHE/bin/sonar-scanner -Dsonar.projectName=spring-application-with-  -Dsonar.projectKey=spring-application-with-mysql \
-                     -Dsonar.java.binaries=. '''
-                     echo "End of sonarqube code analysis"
-
-                   }
+                    echo "SonarQube code analysis"
+                    withSonarQubeEnv(credentialsId: 'sonar-token') {
+                        sh ''' $SCANNER_HOHE/bin/sonar-scanner -Dsonar.projectName=spring-application-with-mysql \
+                        -Dsonar.projectKey=spring-application-with-mysql -Dsonar.java.binaries=. '''
+                        echo "End of SonarQube code analysis"
+                    }
                 }
             }
         }
 
-        // Compiles the code and packages it into a JAR/WAR file inside the target/ directory.
         stage('Mvn Build') {
             steps {
-              sh "mvn package"
+                sh "mvn package"
             }
         }
 
-        // Authenticates with DockerHub (or another registry) using credentials stored in Jenkins (docker-cred).
         stage('Docker Images') {
             steps {
                 script {
-                 echo "Docker Image started..."
-                 withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                    sh "docker build -t ncpl-devops-one ."
-                    sh 'docker images'
-                 }
-                 echo "End of Docker Images"
+                    echo "Docker Image started..."
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh "docker build -t ncpl-devops-one ."
+                        sh 'docker images'
+                    }
+                    echo "End of Docker Images"
                 }
             }
         }
 
-        stage("Tag & Push to DockerHub"){
-            steps{
+        stage("Tag & Push to DockerHub") {
+            steps {
                 script {
                     echo "Tag & Push to DockerHub Started..."
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                      sh "docker tag ncpl-devops-one srinu641/ncpl-devops-one:V3.001"
-                      sh "docker push srinu641/ncpl-devops-one:V3.001"
-                      sh 'docker images'
+                        sh "docker tag ncpl-devops-one srinu641/ncpl-devops-one:V3.001"
+                        sh "docker push srinu641/ncpl-devops-one:V3.001"
+                        sh 'docker images'
                     }
                     echo "End of Tag & Push to DockerHub"
                 }
             }
         }
 
-        stages {
-             stage('Verify Trivy Installation') {
-                steps {
-                  script {
-                     def trivyInstalled = sh(script: 'trivy --version', returnStatus: true)
-                     if (trivyInstalled != 0) {
+        stage('Verify Trivy Installation') {
+            steps {
+                script {
+                    def trivyInstalled = sh(script: 'trivy --version', returnStatus: true)
+                    if (trivyInstalled != 0) {
                         error "Trivy is not installed on the Jenkins agent. Install it before running the job."
-                     } else {
+                    } else {
                         echo "Trivy is installed."
-                  }  }
+                    }
                 }
             }
         }
@@ -131,12 +126,11 @@ pipeline {
                 }
             }
         }
+    }
 
-        post {
-            always {
-                archiveArtifacts artifacts: "${TRIVY_REPORT}", fingerprint: true
-            }
+    post {
+        always {
+            archiveArtifacts artifacts: "${TRIVY_REPORT}", fingerprint: true
         }
-        
     }
 }
