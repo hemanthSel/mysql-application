@@ -44,6 +44,7 @@ pipeline {
                 }
             }
         }
+
 //         // abortPipeline: false means the pipeline will not stop even if the quality gate fails.
 //         stage('Quality Gate') {
 //             steps {
@@ -91,7 +92,7 @@ pipeline {
 
         stage('Docker Image Scan') {
             steps {
-                sh "trivy image --format table -o srinu641/ncpl-devops-one:V3.001"
+                sh "trivy image srinu641/ncpl-devops-one:V3.001"
             }
         }
 
