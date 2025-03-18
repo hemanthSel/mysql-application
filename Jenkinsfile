@@ -8,6 +8,9 @@ pipeline {
 
     environment{
         SCANNER_HOHE= tool 'sonar-scanner'
+        IMAGE_NAME = 'srinu641/ncpl-devops-one'
+        IMAGE_TAG = 'V3.001'
+        TRIVY_REPORT = 'trivy-report.json'
     }
     stages {
         stage('Git Checkout') {
@@ -91,15 +94,57 @@ pipeline {
                 }
             }
         }
-        stage('Verify Trivy Installation') {
-            steps {
-                sh 'trivy --version'
-                sh 'apt-get update && apt-get install -y trivy'  # For Ubuntu/Debian
+
+        stages {
+             stage('Verify Trivy Installation') {
+                steps {
+                 script {
+                    def trivyInstalled = sh(script: 'trivy --version', returnStatus: true)
+                    if (trivyInstalled != 0) {
+                        error "Trivy is not installed on the Jenkins agent. Install it before running the job."
+                    } else {
+                        echo "Trivy is installed."
+                    }
+                }
             }
         }
-        stage('Docker Image Scan') {
+        stage('Scan Docker Image') {
             steps {
-                sh "trivy image srinu641/ncpl-devops-one:V3.001"
+                script {
+                    echo "Scanning Docker image: ${IMAGE_NAME}:${IMAGE_TAG}"
+                    def scanStatus = sh(script: """
+                        trivy image --format json -o ${TRIVY_REPORT} ${IMAGE_NAME}:${IMAGE_TAG}
+                    """, returnStatus: true)
+
+                    if (scanStatus != 0) {
+                        error "Trivy scan failed. Please check the Docker image or Trivy configuration."
+                    } else {
+                        echo "Trivy scan completed. Report generated: ${TRIVY_REPORT}"
+                    }
+                }
+            }
+        }
+        stage('Analyze Scan Results') {
+            steps {
+                script {
+                    def highVulns = sh(script: """
+                        cat ${TRIVY_REPORT} | jq '[.Results[].Vulnerabilities[] | select(.Severity == "HIGH")] | length'
+                    """, returnStdout: true).trim()
+
+                    echo "High severity vulnerabilities found: ${highVulns}"
+
+                    if (highVulns.toInteger() > 0) {
+                        error "High severity vulnerabilities found: ${highVulns}. Failing the build."
+                    } else {
+                        echo "No high severity vulnerabilities found. Proceeding..."
+                    }
+                }
+            }
+        }
+    
+        post {
+            always {
+                archiveArtifacts artifacts: "${TRIVY_REPORT}", fingerprint: true
             }
         }
 
