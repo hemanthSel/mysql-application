@@ -48,18 +48,6 @@ pipeline {
             }
         }
 
-//         // abortPipeline: false means the pipeline will not stop even if the quality gate fails.
-//         stage('Quality Gate') {
-//             steps {
-//                 script {
-//                   echo "sonarqube Quality Gate"
-//                   waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
-//                   echo "End Sonarqube Quality Gate"
-//
-//                 }
-//             }
-//         }
-
         // Compiles the code and packages it into a JAR/WAR file inside the target/ directory.
         stage('Mvn Build') {
             steps {
@@ -149,6 +137,6 @@ pipeline {
                 archiveArtifacts artifacts: "${TRIVY_REPORT}", fingerprint: true
             }
         }
-     }
+        
     }
 }
