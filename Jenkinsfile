@@ -53,6 +53,12 @@ pipeline {
                 }
             }
         }
+        
+        stage('Mvn Build') {
+            steps {
+              sh "mvn package"
+            }
+        }
 
         stage('Docker Images') {
             steps {
