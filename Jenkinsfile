@@ -94,8 +94,6 @@ pipeline {
         stage('Verify Trivy Installation') {
             steps {
                 sh 'trivy --version'
-                sh 'sudo apt-get update && apt-get install -y trivy'
-                echo "raju" | sudo -S apt-get update
             }
         }
         stage('Docker Image Scan') {
