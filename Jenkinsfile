@@ -98,13 +98,13 @@ pipeline {
         stages {
              stage('Verify Trivy Installation') {
                 steps {
-                 script {
-                    def trivyInstalled = sh(script: 'trivy --version', returnStatus: true)
-                    if (trivyInstalled != 0) {
+                  script {
+                     def trivyInstalled = sh(script: 'trivy --version', returnStatus: true)
+                     if (trivyInstalled != 0) {
                         error "Trivy is not installed on the Jenkins agent. Install it before running the job."
-                    } else {
+                     } else {
                         echo "Trivy is installed."
-                    }
+                  }  }
                 }
             }
         }
