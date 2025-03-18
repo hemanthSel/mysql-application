@@ -71,6 +71,7 @@ pipeline {
                  echo "Docker Image started..."
                  withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
                     sh "docker build -t ncpl-devops-one ."
+                    sh 'docker images'
                  }
                  echo "End of Docker Images"
                 }
@@ -84,19 +85,23 @@ pipeline {
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
                       sh "docker tag ncpl-devops-one srinu641/ncpl-devops-one:V3.001"
                       sh "docker push srinu641/ncpl-devops-one:V3.001"
+                      sh 'docker images'
                     }
                     echo "End of Tag & Push to DockerHub"
                 }
             }
         }
-
-        stage('Docker Image Scan') {
+        stage('Verify Trivy Installation') {
             steps {
-                 sh "trivy image --format table -o trivy-image-report.html srinu641/ncpl-devops-one:V3.001"
-                 sh "trivy clean --java-db"
+                sh 'trivy --version'
+                sh 'apt-get update && apt-get install -y trivy'  # For Ubuntu/Debian
             }
         }
-
+        stage('Docker Image Scan') {
+            steps {
+                sh "trivy image srinu641/ncpl-devops-one:V3.001"
+            }
+        }
 
     }
 }
