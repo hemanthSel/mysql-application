@@ -3,7 +3,7 @@ pipeline {
 
     tools {
      jdk 'jdk 17'
-     maven 'mvn 3'
+     maven 'maven3'
     }
 
     environment{
