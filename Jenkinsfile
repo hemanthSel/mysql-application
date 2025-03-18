@@ -108,6 +108,7 @@ pipeline {
                 }
             }
         }
+
         stage('Scan Docker Image') {
             steps {
                 script {
@@ -124,6 +125,7 @@ pipeline {
                 }
             }
         }
+
         stage('Analyze Scan Results') {
             steps {
                 script {
@@ -141,12 +143,12 @@ pipeline {
                 }
             }
         }
-    
+
         post {
             always {
                 archiveArtifacts artifacts: "${TRIVY_REPORT}", fingerprint: true
             }
         }
-
+     }
     }
 }
