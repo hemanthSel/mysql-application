@@ -16,12 +16,14 @@ pipeline {
             }
         }
 
+        // clean removes the target/ directory (compiled code and artifacts).
         stage('Integration Test') {
             steps {
                 sh "mvn clean install -DskipTests=true"
             }
         }
 
+        // mvn compile runs the Maven compile phase, which compiles the project's source code.
         stage('Maven Compile') {
             steps {
                 echo "Maven Compile started..."
@@ -42,24 +44,26 @@ pipeline {
                 }
             }
         }
+//         // abortPipeline: false means the pipeline will not stop even if the quality gate fails.
+//         stage('Quality Gate') {
+//             steps {
+//                 script {
+//                   echo "sonarqube Quality Gate"
+//                   waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+//                   echo "End Sonarqube Quality Gate"
+//
+//                 }
+//             }
+//         }
 
-        stage('Quality Gate') {
-            steps {
-                script {
-                  echo "sonarqube Quality Gate"
-                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
-                  echo "End Sonarqube Quality Gate"
-
-                }
-            }
-        }
-        
+        // Compiles the code and packages it into a JAR/WAR file inside the target/ directory.
         stage('Mvn Build') {
             steps {
               sh "mvn package"
             }
         }
 
+        // Authenticates with DockerHub (or another registry) using credentials stored in Jenkins (docker-cred).
         stage('Docker Images') {
             steps {
                 script {
