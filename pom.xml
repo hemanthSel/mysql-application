@@ -63,5 +63,17 @@
 		</plugins>
 		<finalName>ncpl-devops-one</finalName>
 	</build>
-
+	<distributionManagement>
+		<!--todo Publish the versioned releases here -->
+		<snapshotRepository>
+			<id>snapshotnexus</id>
+			<name>snapshot nexus</name>
+			<url>http://192.168.0.109:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>releasenexus</id>
+			<name>release nexus</name>
+			<url>http://192.168.0.109:8081/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
 </project>
