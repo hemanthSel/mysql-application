@@ -50,7 +50,9 @@ pipeline {
                 script {
             echo "--> Nexus started <--"
             sh '''
-            nexusArtifactUploader artifacts: [[artifactId: 'mysql-application',
+            nexusArtifactUploader artifacts: [
+            [
+            artifactId: 'spring-maven',
             classifier: '',
             file: 'target/ncpl-devops-one:V3.001',
             type: 'jar'
