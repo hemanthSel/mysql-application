@@ -45,7 +45,7 @@ pipeline {
             }
         }
 
-        stage('Publish To Nexus'') {
+        stage('Publish To Nexus') {
          steps {
                 script {
             echo "--> Nexus started <--"
