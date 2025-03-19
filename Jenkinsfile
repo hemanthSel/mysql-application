@@ -49,6 +49,7 @@ pipeline {
          steps {
                 script {
             echo "--> Nexus started <--"
+            sh '''
             nexusArtifactUploader artifacts: [[artifactId: 'mysql-application',
             classifier: '',
             file: 'target/ncpl-devops-one:V3.001',
@@ -61,6 +62,7 @@ pipeline {
             protocol: 'http',
            repository: 'spring-mysql-nexus',
            version: '0.0.1'
+           '''
 
         }}}
 
