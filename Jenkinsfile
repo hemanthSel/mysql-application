@@ -45,7 +45,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube-Analysis') {
+        stage('Publish To Nexus'') {
          steps {
                 script {
             echo "--> Nexus started <--"
