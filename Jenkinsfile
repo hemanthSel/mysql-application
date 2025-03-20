@@ -45,28 +45,28 @@ pipeline {
             }
         }
 
-        stage('Publish To Nexus') {
-         steps {
-                script {
-            echo "--> Nexus started <--"
-            sh '''
-            nexusArtifactUploader artifacts: [
-            [
-            artifactId: 'spring-maven',
-            classifier: '',
-            file: 'target/ncpl-devops-one:V3.001',
-            type: 'jar'
-            ]],
-            credentialsId: 'nexus-cred',
-            groupId: 'com.mysql',
-            nexusUrl: '192.168.0.109:8081',
-            nexusVersion: 'nexus2',
-            protocol: 'http',
-           repository: 'spring-mysql-nexus',
-           version: '0.0.1'
-           '''
-
-        }}}
+//         stage('Publish To Nexus') {
+//          steps {
+//                 script {
+//             echo "--> Nexus started <--"
+//             sh '''
+//             nexusArtifactUploader artifacts: [
+//             [
+//             artifactId: 'spring-maven',
+//             classifier: '',
+//             file: 'target/ncpl-devops-one:V3.001',
+//             type: 'jar'
+//             ]],
+//             credentialsId: 'nexus-cred',
+//             groupId: 'com.mysql',
+//             nexusUrl: '192.168.0.109:8081',
+//             nexusVersion: 'nexus2',
+//             protocol: 'http',
+//            repository: 'spring-mysql-nexus',
+//            version: '0.0.1'
+//            '''
+//
+//         }}}
 
 //         // abortPipeline: false means the pipeline will not stop even if the quality gate fails.
 //         stage('Quality Gate') {
