@@ -116,7 +116,8 @@ pipeline {
         }
         stage('Verify Trivy Installation') {
             steps {
-                sh 'export HOME=/var/jenkins'
+                echo "Trivy version check"
+                sh 'export HOME=/var/root/jenkins'
                 sh 'trivy --version'
             }
         }
