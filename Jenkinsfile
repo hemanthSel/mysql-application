@@ -106,8 +106,8 @@ pipeline {
                 script {
                     echo "Tag & Push to DockerHub Started..."
                     withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
-                      sh "docker tag ncpl-devops-one hemanth509/devops-one:V1.001"
-                      sh "docker push semanth509/devops-one:V3.001"
+                      sh "docker tag devops-one hemanth509/devops-one:V1.001"
+                      sh "docker push hemanth509/devops-one:V1.001"
                       sh 'docker images'
                     }
                     echo "End of Tag & Push to DockerHub"
@@ -121,7 +121,7 @@ pipeline {
         }
         stage('Docker Image Scan') {
             steps {
-                sh "trivy image srinu641/ncpl-devops-one:V3.001"
+                sh "trivy image hemanth509/devops-one:V1.001"
             }
         }
 
