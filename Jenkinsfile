@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                 git branch: 'master', url: 'https://github.com/Srinu-rj/mysql-application'
+                 git branch: 'master', url: 'https://github.com/hemanthSel/mysql-application'
             }
         }
 
@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                  echo "Docker Image started..."
-                 withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                 withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
                     sh "docker build -t ncpl-devops-one ."
                     sh 'docker images'
                  }
@@ -105,7 +105,7 @@ pipeline {
             steps{
                 script {
                     echo "Tag & Push to DockerHub Started..."
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
                       sh "docker tag ncpl-devops-one srinu641/ncpl-devops-one:V3.001"
                       sh "docker push srinu641/ncpl-devops-one:V3.001"
                       sh 'docker images'
