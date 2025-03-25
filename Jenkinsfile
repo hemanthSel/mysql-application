@@ -93,7 +93,7 @@ pipeline {
                 script {
                  echo "Docker Image started..."
                  withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
-                    sh "docker build -t ncpl-devops-one ."
+                    sh "docker build -t devops-one ."
                     sh 'docker images'
                  }
                  echo "End of Docker Images"
@@ -106,8 +106,8 @@ pipeline {
                 script {
                     echo "Tag & Push to DockerHub Started..."
                     withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
-                      sh "docker tag ncpl-devops-one srinu641/ncpl-devops-one:V3.001"
-                      sh "docker push srinu641/ncpl-devops-one:V3.001"
+                      sh "docker tag ncpl-devops-one hemanth509/devops-one:V1.001"
+                      sh "docker push semanth509/devops-one:V3.001"
                       sh 'docker images'
                     }
                     echo "End of Tag & Push to DockerHub"
