@@ -93,6 +93,7 @@ pipeline {
                 script {
                  echo "Docker Image started..."
                  withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
+                     sh "chmod 777 /var/run/docker.sock"
                     sh "docker build -t devops-one ."
                     sh 'docker images'
                  }
