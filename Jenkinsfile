@@ -92,11 +92,11 @@ pipeline {
             steps {
                 script {
                  echo "Docker Image started..."
-                 withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {
-                     sh "sudo usermod -aG docker $USER"
+                    sh "sudo usermod -aG docker $USER"
                      sh "newgrp docker"
                      sh "groups"
                      sh "sudo chmod 777 /var/run/docker.sock"
+                 withDockerRegistry(credentialsId: 'dockerID', toolName: 'docker') {                     
                     sh "docker build -t devops-one ."
                     sh 'docker images'
                  }
