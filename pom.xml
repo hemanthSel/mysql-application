@@ -61,7 +61,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>ncpl-devops-one</finalName>
+		<finalName>devops-one</finalName>
 	</build>
 	<distributionManagement>
 		<!--todo Publish the versioned releases here -->
