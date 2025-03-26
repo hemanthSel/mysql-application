@@ -118,7 +118,7 @@ pipeline {
             steps {
                 echo "Trivy version check"
                 sh 'export HOME=/var/root/jenkins'
-                sh 'trivy --version'
+              //  sh 'trivy --version'
             }
         }
         stage('Docker Image Scan') {
