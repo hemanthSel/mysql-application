@@ -31,19 +31,19 @@ pipeline {
             }
         }
 
-        // stage('SonarQube-Analysis') {
-        //     steps {
-        //         script {
-        //          echo "sonarqube code analysis"
-        //          withSonarQubeEnv(credentialsId: 'sonar-token') {
-        //              sh ''' $SCANNER_HOHE/bin/sonar-scanner -Dsonar.projectName=spring-application-with-  -Dsonar.projectKey=spring-application-with-mysql \
-        //              -Dsonar.java.binaries=. '''
-        //              echo "End of sonarqube code analysis"
+        stage('SonarQube-Analysis') {
+            steps {
+                script {
+                 echo "sonarqube code analysis"
+                 withSonarQubeEnv(credentialsId: 'sonar-token') {
+                     sh ''' $SCANNER_HOHE/bin/sonar-scanner -Dsonar.projectName=spring-application-with-  -Dsonar.projectKey=spring-application-with-mysql \
+                     -Dsonar.java.binaries=. '''
+                     echo "End of sonarqube code analysis"
 
-        //            }
-        //         }
-        //     }
-        // }
+                   }
+                }
+            }
+        }
 
 //         stage('Publish To Nexus') {
 //          steps {
